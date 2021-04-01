@@ -6,6 +6,7 @@ const Vision = require('@hapi/vision')
 const HapiSwagger = require('hapi-swagger');
 const Joi = require('joi');
 const sleep = require('await-sleep')
+const got = require('got')
 
 const os = require('os')
 
@@ -72,7 +73,7 @@ const init = async () => {
             tags: ['api'],
             validate: {
                 params: Joi.object({
-                    status: Joi.number().required().description('new http status code')
+                    status: Joi.number().default(503).required().description('new http status code')
                 })
             }
         }
@@ -90,7 +91,25 @@ const init = async () => {
             tags: ['api'],
             validate: {
                 params: Joi.object({
-                    delay: Joi.number().required().description('delay (seconds)')
+                    delay: Joi.number().required().default(1).description('delay (seconds)')
+                })
+            }
+        }
+    })
+
+    server.route({
+        method: 'GET',
+        path: '/call',
+        handler: async (request, h) => {
+            const url = request.query.url
+            const response = await got(url)
+            return response.body
+        },
+        options: {
+            tags: ['api'],
+            validate: {
+                query: Joi.object({
+                    url: Joi.string().required().default('https://google.com').description('url')
                 })
             }
         }
