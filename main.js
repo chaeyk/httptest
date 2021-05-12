@@ -110,6 +110,7 @@ const init = async () => {
                 return response.body
             } catch (e) {
                 console.log(e);
+                throw e;
             }
         },
         options: {
