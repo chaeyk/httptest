@@ -11,7 +11,10 @@ const got = require('got')
 const os = require('os')
 
 const hostname = os.hostname()
-const port = 8080
+
+var port = 8080
+if (process.env.PORT)
+    port = parseInt(process.env.PORT);
 
 const init = async () => {
     const server = Hapi.server({
