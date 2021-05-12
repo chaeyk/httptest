@@ -105,8 +105,12 @@ const init = async () => {
         path: '/call',
         handler: async (request, h) => {
             const url = request.query.url
-            const response = await got(url)
-            return response.body
+            try {
+                const response = await got(url)
+                return response.body
+            } catch (e) {
+                console.log(e);
+            }
         },
         options: {
             tags: ['api'],
